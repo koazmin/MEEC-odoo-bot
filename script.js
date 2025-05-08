@@ -15,7 +15,7 @@ async function sendMessage() {
   userInput.value = "";
 
   // Show loading message while waiting for the bot response
-  displayMessage("🤖 မေ့လျော့နေပါတယ်...", 'bot');
+  displayMessage("🤖 မေးခွန်းကိုဖြေဖို့ကြိုးစားနေပါတယ်...", 'bot');
 
   try {
     // Send question to Gemini API
@@ -50,7 +50,7 @@ async function sendMessage() {
     updateBotMessage(reply);
   } catch (error) {
     // In case of an error, show an error message
-    updateBotMessage("🤖 ဆက်သွယ်မှုအမှား ဖြစ်နေပါသည်။ ပြန်လည်ကြိုးစားပါ။");
+    updateBotMessage("🤖 ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
     console.error("Error:", error);
   }
 }
