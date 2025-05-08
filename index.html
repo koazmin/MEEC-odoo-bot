@@ -5,21 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Odoo 17 Assistant (Bavin)</title>
   <style>
-    body { font-family: sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
-    #chat { max-width: 600px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .message { margin: 10px 0; }
-    .user { color: blue; }
-    .bot { color: green; }
-    input, button { font-size: 16px; padding: 10px; margin-top: 10px; width: 100%; }
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    /* Chatbox Styles */
+    #chat {
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Message Styles */
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    /* User message */
+    .user {
+      background-color: #d1e7ff;
+      align-self: flex-start;
+      text-align: left;
+    }
+
+    /* Bot message */
+    .bot {
+      background-color: #d4fcd8;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    /* Input Styles */
+    input, button {
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 20px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    input:focus, button:focus {
+      border-color: #007bff;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Scrollbar Styles */
+    #messages {
+      overflow-y: auto;
+      flex-grow: 1;
+      padding-right: 10px;
+    }
   </style>
 </head>
 <body>
+
   <div id="chat">
     <div class="message bot">🤖 ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo 17 ERP အကြောင်းသိချင်တာမေးပါ။</div>
     <div id="messages"></div>
     <input id="userInput" type="text" placeholder="မေးခွန်းရေးပါ..." />
     <button onclick="sendMessage()">မေးမယ်</button>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
