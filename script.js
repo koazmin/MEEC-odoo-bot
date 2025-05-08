@@ -1,4 +1,4 @@
-const API_KEY = "YOUR_GEMINI_API_KEY"; // Replace with your actual Gemini API key
+const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk"; // Replace with your actual Gemini API key
 
 const SYSTEM_PROMPT = `
 သင်မှာ Bavin ဖုန်းအပိုပစ္စည်းများကို လက်ကား/စတိုးရောင်းဝယ်လုပ်ငန်းဖြင့် လုပ်ကိုင်နေပြီး Odoo 17 Enterprise ကို အသုံးပြုပြီး Sales, Inventory, Purchase, Accounting, CRM, Contacts စတဲ့ module တွေနဲ့ လုပ်ငန်းကို စနစ်တကျစီမံခန့်ခွဲနေပါတယ်။ 
