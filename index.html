@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Odoo 17 Assistant (Gemini)</title>
+  <title>Odoo 17 Gemini Chatbot</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
-    #chat { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .message { margin-bottom: 15px; }
-    .user { text-align: right; color: blue; }
-    .bot { text-align: left; color: green; }
-    input, button { padding: 10px; font-size: 1em; margin-top: 10px; }
+    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
+    #chat { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; }
+    .bubble { margin: 10px 0; padding: 10px; border-radius: 8px; }
+    .user { background: #d0f0c0; text-align: right; }
+    .bot { background: #f0f0f0; text-align: left; }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; }
   </style>
 </head>
 <body>
   <div id="chat">
-    <div class="message bot">ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ သိချင်တာမေးပါ။</div>
-    <div id="messages"></div>
-    <input type="text" id="userInput" placeholder="မေးခွန်းရေးပါ..." />
-    <button onclick="sendMessage()">မေးမည်</button>
+    <div class="bubble bot">ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ သိချင်တာမေးပါ။</div>
   </div>
-
+  <input type="text" id="input" placeholder="မေးခွန်းရိုက်ထည့်ပါ..." />
+  <button onclick="sendMessage()">မေးမယ်</button>
   <script src="script.js"></script>
 </body>
 </html>

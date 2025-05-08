@@ -1,39 +1,49 @@
-
 const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk";
-const MODEL = "models/gemini-pro";
-const SYSTEM_PROMPT = "ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo 17 ERP အကြောင်းသိချင်တာမေးပါ။";
 
 async function sendMessage() {
-  const input = document.getElementById("userInput");
-  const message = input.value;
+  const input = document.getElementById("input");
+  const message = input.value.trim();
   if (!message) return;
 
-  const chatBox = document.getElementById("messages");
-  const userMessage = document.createElement("div");
-  userMessage.className = "message user";
-  userMessage.textContent = message;
-  chatBox.appendChild(userMessage);
+  const chat = document.getElementById("chat");
+
+  // Show user message
+  const userDiv = document.createElement("div");
+  userDiv.className = "bubble user";
+  userDiv.textContent = message;
+  chat.appendChild(userDiv);
+
   input.value = "";
 
-  const botMessage = document.createElement("div");
-  botMessage.className = "message bot";
-  botMessage.textContent = "စစ်ဆေးနေသည်...";
-  chatBox.appendChild(botMessage);
+  // Show loading message
+  const loadingDiv = document.createElement("div");
+  loadingDiv.className = "bubble bot";
+  loadingDiv.textContent = "ဖြေနေသည်...";
+  chat.appendChild(loadingDiv);
 
+  // Gemini API call
   try {
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + API_KEY, {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + API_KEY, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: SYSTEM_PROMPT + "\nUser: " + message }] }]
-      })
+        contents: [{ parts: [{ text: message }] }],
+      }),
     });
 
-    const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "ဖြေဆို၍မရပါ။ ကျေးဇူးပြု၍ မေးခွန်းကို ပြန်စဉ်းစားပါ။";
-    botMessage.textContent = text;
-  } catch (error) {
-    botMessage.textContent = "အမှားတခု ဖြစ်ပွားခဲ့သည်။";
-    console.error(error);
+    const data = await res.json();
+    loadingDiv.remove();
+
+    const botDiv = document.createElement("div");
+    botDiv.className = "bubble bot";
+    botDiv.textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "မဖြေနိုင်ပါ။";
+    chat.appendChild(botDiv);
+
+  } catch (e) {
+    loadingDiv.remove();
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "bubble bot";
+    errorDiv.textContent = "အမှားအယွင်း ဖြစ်ပွားခဲ့သည်။";
+    chat.appendChild(errorDiv);
   }
 }
