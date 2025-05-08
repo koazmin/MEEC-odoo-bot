@@ -1,4 +1,5 @@
-const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk"; // your Gemini API key
+const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk"; // Your Gemini API Key
+
 const SYSTEM_PROMPT = "ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo 17 ERP အကြောင်းသိချင်တာမေးပါ။";
 
 const messagesDiv = document.getElementById("messages");
@@ -18,10 +19,14 @@ async function sendMessage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [
-          { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
-          { role: "user", parts: [{ text: question }] },
-        ],
-      }),
+          {
+            role: "user",
+            parts: [
+              { text: SYSTEM_PROMPT + "\n\nမေးခွန်း: " + question }
+            ]
+          }
+        ]
+      })
     }
   );
 
