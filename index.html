@@ -1,24 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odoo 17 Gemini Assistant</title>
-    <style>
-        body { font-family: sans-serif; padding: 2rem; max-width: 600px; margin: auto; }
-        textarea { width: 100%; height: 100px; padding: 1rem; margin-top: 1rem; }
-        button { padding: 1rem 2rem; margin-top: 1rem; }
-        .response { margin-top: 2rem; white-space: pre-wrap; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Odoo 17 Assistant (Bavin)</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    #chat { max-width: 600px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .message { margin: 10px 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+    input, button { font-size: 16px; padding: 10px; margin-top: 10px; width: 100%; }
+  </style>
 </head>
 <body>
-    <h1>Odoo 17 Gemini Assistant</h1>
-    <p>ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ သိချင်တာမေးပါ။</p>
-    <textarea id="userInput" placeholder="မေးခွန်းရိုက်ထည့်ပါ..."></textarea>
-    <br>
-    <button onclick="sendMessage()">မေးမည်</button>
-    <div class="response" id="responseArea"></div>
-    <script src="script.js"></script>
+  <div id="chat">
+    <div class="message bot">🤖 ကျွန်တော်က မိတ်ဆွေတို့ကို ကူညီမယ့် Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo 17 ERP အကြောင်းသိချင်တာမေးပါ။</div>
+    <div id="messages"></div>
+    <input id="userInput" type="text" placeholder="မေးခွန်းရေးပါ..." />
+    <button onclick="sendMessage()">မေးမယ်</button>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
