@@ -75,7 +75,7 @@ function animateBotReply(text) {
     } else {
       clearInterval(typingInterval);
     }
-  }, 25); // Adjust typing speed here (ms per character)
+  }, 10); // Adjust typing speed here (ms per character)
 }
 
 function scrollToBottom() {
