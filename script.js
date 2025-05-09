@@ -10,7 +10,7 @@ const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက
 - ပရော်ဖက်ရှင်နယ်သဘောထားဖြင့် ကူညီမှုအရင်းအမြစ်ဖြစ်ဖို့ ရည်ရွယ်ပါတယ်။
 
 မေးခွန်းသည် Odoo 17 နှင့် မသက်ဆိုင်ပါက —  
-“ကျွန်တော်က Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo နှင့်ပတ်သက်သော မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ အခြားအကြောင်းအရာများအတွက် Google၊ YouTube သို့မဟုတ် သက်ဆိုင်ရာ support ပေးသူများထံတွင် ဆက်သွယ်ကြည့်ပါ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
+“ကျွန်တော်က Odoo 17 အတွက်ပဲလေ့ကျင့်ထားတဲ့ Assistant ဖြစ်လို့ Odoo နှင့်ပတ်သက်တဲ့ မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ တခြားအကြောင်းအရာတွေအတွက် Google၊ YouTube ဒါမှမဟုတ် သက်ဆိုင်တဲ့ အကူအညီ ပေးနိုင်တဲ့သူတွေကို ဆက်သွယ်ကြည့်ပါခင်ဗျာ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
 
 အဆင့်များပြသသည့် မေးခွန်းများအတွက်တော့ တစ်ဆင့်ချင်းနည်းလမ်းများ၊ လုပ်ဆောင်ပုံနမူနာများဖြင့် လမ်းညွှန်ပေးပါမယ်။`;
 
@@ -41,10 +41,10 @@ async function sendMessage() {
     }
 
     const data = await response.json();
-    const reply = data.reply || "🤖✨ မဖြေပေးနိုင်ပါ။";
+    const reply = data.reply || "✨ မဖြေပေးနိုင်ပါ။";
     animateBotReply(reply);
   } catch (error) {
-    animateBotReply("🤖✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
+    animateBotReply("c✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
     console.error("Error:", error);
   }
 }
@@ -52,7 +52,7 @@ async function sendMessage() {
 function displayMessage(message, sender) {
   const messageContainer = document.createElement('div');
   messageContainer.classList.add('message', sender);
-  messageContainer.textContent = (sender === 'user' ? "🧑‍💻 " : "🤖✨ ") + message;
+  messageContainer.textContent = (sender === 'user' ? " 👨‍💼 " : " ✨ ") + message;
   messagesDiv.appendChild(messageContainer);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
@@ -64,7 +64,7 @@ function animateBotReply(text) {
 
   const messageElement = botMessages[botMessages.length - 1];
   let index = 0;
-  const prefix = "🤖✨ ";
+  const prefix = "✨ ";
 
   messageElement.textContent = prefix;
 
