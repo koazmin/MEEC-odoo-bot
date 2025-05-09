@@ -1,6 +1,6 @@
 const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk"; // Your Gemini API Key
 
-const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက် Odoo 17 Enterprise ကို အသုံးပြုရလွယ်ကူအောင် ကူညီပေးမယ့် Assistant ဖြစ်ပါတယ်။
+const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက် Odoo 17 Enterprise ကို အသုံးပြုနေသူများအတွက် ကူညီပေးမယ့် Assistant ဖြစ်ပါတယ်။
 
 ကျွန်တော်ရဲ့ တာဝန်မှာ Odoo 17 ရဲ့ module အားလုံး (Sales, Inventory, Purchase, Accounting, CRM, Contacts အပါအဝင်) နဲ့ပတ်သက်တဲ့ မေးခွန်းများကို ရိုးရှင်းပြီး နားလည်ရလွယ်အောင်၊ ရေရှည်အသုံးဝင်အောင် မြန်မာလိုဖြေကြားပေးဖို့ ဖြစ်ပါတယ်။
 
@@ -10,7 +10,7 @@ const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက
 - ပရော်ဖက်ရှင်နယ်သဘောထားဖြင့် ကူညီမှုအရင်းအမြစ်ဖြစ်ဖို့ ရည်ရွယ်ပါတယ်။
 
 မေးခွန်းသည် Odoo 17 နှင့် မသက်ဆိုင်ပါက —  
-“ကျွန်တော်က Odoo 17 အတွက်သာလေ့ကျင့်ပေးထားတဲ့ Assistant ဖြစ်လို့ Odoo နှင့်ပတ်သက်တဲ့ မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ တခြားအကြောင်းအရာတွေအတွက်တော့ Google၊ YouTube ဒါမှမဟုတ် သက်ဆိုင်တဲ့ အကူအညီပေးနိုင်သူတွေကို ဆက်သွယ်မေးမြန်းကြည့်ပါခင်ဗျာ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
+“ကျွန်တော်က Odoo 17 Assistant ဖြစ်ပါတယ်။ Odoo နှင့်ပတ်သက်သော မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ အခြားအကြောင်းအရာများအတွက် Google၊ YouTube သို့မဟုတ် သက်ဆိုင်ရာ support ပေးသူများထံတွင် ဆက်သွယ်ကြည့်ပါ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
 
 အဆင့်များပြသသည့် မေးခွန်းများအတွက်တော့ တစ်ဆင့်ချင်းနည်းလမ်းများ၊ လုပ်ဆောင်ပုံနမူနာများဖြင့် လမ်းညွှန်ပေးပါမယ်။`;
 
@@ -23,7 +23,9 @@ async function sendMessage() {
 
   displayMessage(question, 'user');
   userInput.value = "";
-  displayMessage("🤖 မေးခွန်းကိုဖြေဖို့ကြိုးစားနေပါတယ်...", 'bot');
+
+  // Show a loading message from the bot
+  displayMessage("မေးခွန်းကိုဖြေဖို့ကြိုးစားနေပါတယ်...", 'bot');
 
   try {
     const response = await fetch("/api/gemini", {
@@ -39,10 +41,10 @@ async function sendMessage() {
     }
 
     const data = await response.json();
-    const reply = data.reply || "🤖 မဖြေပေးနိုင်ပါ။";
-    updateBotMessage(reply);
+    const reply = data.reply || "🤖✨ မဖြေပေးနိုင်ပါ။";
+    animateBotReply(reply);
   } catch (error) {
-    updateBotMessage("🤖 ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
+    animateBotReply("🤖✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
     console.error("Error:", error);
   }
 }
@@ -50,12 +52,13 @@ async function sendMessage() {
 function displayMessage(message, sender) {
   const messageContainer = document.createElement('div');
   messageContainer.classList.add('message', sender);
-  messageContainer.textContent = (sender === 'user' ? "🧑 " : "🤖 ") + message;
+  messageContainer.textContent = (sender === 'user' ? "🧑‍💻 " : "🤖✨ ") + message;
   messagesDiv.appendChild(messageContainer);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-function updateBotMessage(text) {
+// Typing animation for bot message
+function animateBotReply(text) {
   const botMessages = messagesDiv.querySelectorAll('.message.bot');
   if (botMessages.length === 0) return;
 
@@ -72,10 +75,7 @@ function updateBotMessage(text) {
     } else {
       clearInterval(typingInterval);
     }
-  }, 25); // Speed in milliseconds per character (adjust if needed)
-}
-
-  scrollToBottom();
+  }, 25); // Adjust typing speed here (ms per character)
 }
 
 function scrollToBottom() {
