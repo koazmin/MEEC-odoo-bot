@@ -57,9 +57,24 @@ function displayMessage(message, sender) {
 
 function updateBotMessage(text) {
   const botMessages = messagesDiv.querySelectorAll('.message.bot');
-  if (botMessages.length > 0) {
-    botMessages[botMessages.length - 1].textContent = "🤖 " + text;
-  }
+  if (botMessages.length === 0) return;
+
+  const messageElement = botMessages[botMessages.length - 1];
+  let index = 0;
+  const prefix = "🤖✨ ";
+
+  messageElement.textContent = prefix;
+
+  const typingInterval = setInterval(() => {
+    if (index < text.length) {
+      messageElement.textContent += text.charAt(index);
+      index++;
+    } else {
+      clearInterval(typingInterval);
+    }
+  }, 25); // Speed in milliseconds per character (adjust if needed)
+}
+
   scrollToBottom();
 }
 
