@@ -1,12 +1,18 @@
 const API_KEY = "AIzaSyDKLen0neTJVWeeoq_MnaidQlYtPb79vMk"; // Your Gemini API Key
 
-const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက် နည်းပညာအကူအညီပေးမယ့် Assistant ဖြစ်ပါတယ်။
+const SYSTEM_PROMPT = မင်္ဂလာပါ။ Bavin Myanmar အတွက် Odoo 17 Enterprise ကို အသုံးပြုနေသူများအတွက် ကူညီပေးမယ့် Assistant ဖြစ်ပါတယ်။
 
-ကျွန်ုပ်၏ အဓိက လုပ်ငန်းဆောင်တာမှာ Bavin ဖုန်းဆက်စပ်ပစ္စည်းများနှင့် ပတ်သက်သော နည်းပညာဆိုင်ရာ မေးခွန်းများကို တိကျရှင်းလင်းစွာ မြန်မာဘာသာဖြင့် ဖြေကြားရန် ဖြစ်ပါသည်။ 
+ကျွန်တော်ရဲ့ တာဝန်မှာ Odoo 17 ရဲ့ module အားလုံး (Sales, Inventory, Purchase, Accounting, CRM, Contacts အပါအဝင်) နဲ့ပတ်သက်တဲ့ မေးခွန်းများကို ရိုးရှင်းပြီး နားလည်ရလွယ်အောင်၊ ရေရှည်အသုံးဝင်အောင် မြန်မာလိုဖြေကြားပေးဖို့ ဖြစ်ပါတယ်။
 
-ကျွမ်းကျင်နယ်ပယ်
-ကျွန်ုပ်၏ ကျွမ်းကျင်မှုသည် Bavin ထုတ်ကုန်များနှင့် ၎င်းတို့အသုံးပြုသော နည်းပညာများပေါ်တွင် အဓိက တည်ရှိပါသည်။ ဖုန်းဆက်စပ်ပစ္စည်းများနှင့် အားသွင်းစံနှုန်းများဆိုင်ရာ အထွေထွေဗဟုသုတကို အသုံးပြုနိုင်သော်လည်း၊ ဖြစ်နိုင်ပါက Bavin ၏ ထုတ်ကုန်လိုင်းနှင့် မည်သို့သက်ဆိုင်သည်ကို အမြဲတမ်း ဆက်စပ်ဖော်ပြပါမည်။
-`;
+ဖြေကြားမှုများမှာ:
+- တိကျသေချာပြီး
+- အတိုချုံးသာမက လိုအပ်သည်များကို နမူနာနဲ့တကွ ဖြေကြားနိုင်ရန်
+- ပရော်ဖက်ရှင်နယ်သဘောထားဖြင့် ကူညီမှုအရင်းအမြစ်ဖြစ်ဖို့ ရည်ရွယ်ပါတယ်။
+
+မေးခွန်းသည် Odoo 17 နှင့် မသက်ဆိုင်ပါက —  
+“ကျွန်တော်က Odoo 17 အတွက်ပဲလေ့ကျင့်ထားတဲ့ Assistant ဖြစ်လို့ Odoo နှင့်ပတ်သက်တဲ့ မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ တခြားအကြောင်းအရာတွေအတွက် Google၊ YouTube ဒါမှမဟုတ် သက်ဆိုင်တဲ့ အကူအညီ ပေးနိုင်တဲ့သူတွေကို ဆက်သွယ်ကြည့်ပါခင်ဗျာ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
+
+အဆင့်များပြသသည့် မေးခွန်းများအတွက်တော့ တစ်ဆင့်ချင်းနည်းလမ်းများ၊ လုပ်ဆောင်ပုံနမူနာများဖြင့် လမ်းညွှန်ပေးပါမယ်။;
 
 const messagesDiv = document.getElementById("messages");
 
@@ -18,6 +24,7 @@ async function sendMessage() {
   displayMessage(question, 'user');
   userInput.value = "";
 
+  // Show a loading message from the bot
   displayMessage("မေးခွန်းကိုဖြေဖို့ကြိုးစားနေပါတယ်...", 'bot');
 
   try {
@@ -37,7 +44,7 @@ async function sendMessage() {
     const reply = data.reply || "✨ မဖြေပေးနိုင်ပါ။";
     animateBotReply(reply);
   } catch (error) {
-    animateBotReply("✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
+    animateBotReply("c✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။");
     console.error("Error:", error);
   }
 }
@@ -50,6 +57,7 @@ function displayMessage(message, sender) {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
+// Typing animation for bot message
 function animateBotReply(text) {
   const botMessages = messagesDiv.querySelectorAll('.message.bot');
   if (botMessages.length === 0) return;
@@ -67,7 +75,7 @@ function animateBotReply(text) {
     } else {
       clearInterval(typingInterval);
     }
-  }, 7);
+  }, 7); // Adjust typing speed here (ms per character)
 }
 
 function scrollToBottom() {
