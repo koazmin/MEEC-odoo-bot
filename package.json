@@ -7,7 +7,7 @@
     "start": "node api/gemini.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.11.0" // Check for the very latest version on npmjs.com
+    "@google/generative-ai": "^0.11.0"
   },
   "engines": {
     "node": ">=18"
