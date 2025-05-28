@@ -84,7 +84,7 @@ function animateBotReply(text) {
     } else {
       clearInterval(typingInterval);
     }
-  }, 10); // Adjust typing speed here (ms per character)
+  }, 4); // Adjust typing speed here (ms per character)
 }
 
 // Helper function to escape HTML for display (prevents XSS if Gemini output contains HTML tags)
