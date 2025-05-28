@@ -1,95 +1,125 @@
-// api/gemini.js
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+// script.js
+const messagesDiv = document.getElementById("messages");
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton'); // Assuming you have a send button
 
-// IMPORTANT: Your API Key MUST be set as an Environment Variable in Vercel.
-// Name it GEMINI_API_KEY in Vercel project settings.
-const API_KEY = process.env.GEMINI_API_KEY;
+// Store conversation history on the client side
+// This will be sent to the server with each request to maintain context
+let clientConversationHistory = [];
 
-if (!API_KEY) {
-    console.error("GEMINI_API_KEY environment variable is not set.");
-    // In a real application, you might want to return an error response here for API calls
-    // but for Vercel, it's better to ensure it's set in the environment.
-}
+// Function to send message (triggered by button click or Enter key)
+async function sendMessage() {
+    const question = userInput.value.trim();
+    if (!question) return; // Don't send empty messages
 
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" }); // Using gemini-pro for general chat
+    displayMessage(question, 'user'); // Display user's message immediately
+    userInput.value = ""; // Clear input field
 
-const SYSTEM_PROMPT = `မင်္ဂလာပါ။ Bavin Myanmar အတွက် Odoo 17 Enterprise ကို အသုံးပြုနေသူများအတွက် ကူညီပေးမယ့် Assistant ဖြစ်ပါတယ်။
-
-ကျွန်တော်ရဲ့ တာဝန်မှာ Odoo 17 ရဲ့ module အားလုံး (Sales, Inventory, Purchase, Accounting, CRM, Contacts အပါအဝင်) နဲ့ပတ်သက်တဲ့ မေးခွန်းများကို ရိုးရှင်းပြီး နားလည်ရလွယ်အောင်၊ ရေရှည်အသုံးဝင်အောင် မြန်မာလိုဖြေကြားပေးဖို့ ဖြစ်ပါတယ်။
-
-ဖြေကြားမှုများမှာ:
-- တိကျသေချာပြီး
-- အတိုချုံးသာမက လိုအပ်သည်များကို နမူနာနဲ့တကွ ဖြေကြားနိုင်ရန်
-- ပရော်ဖက်ရှင်နယ်သဘောထားဖြင့် ကူညီမှုအရင်းအမြစ်ဖြစ်ဖို့ ရည်ရွယ်ပါတယ်။
-
-မေးခွန်းသည် Odoo 17 နှင့် မသက်ဆိုင်ပါက —
-“ကျွန်တော်က Odoo 17 အတွက်ပဲလေ့ကျင့်ထားတဲ့ Assistant ဖြစ်လို့ Odoo နှင့်ပတ်သက်တဲ့ မေးခွန်းများကိုသာ ဖြေပေးနိုင်ပါတယ်။ တခြားအကြောင်းအရာတွေအတွက် Google၊ YouTube ဒါမှမဟုတ် သက်ဆိုင်တဲ့ အကူအညီ ပေးနိုင်တဲ့သူတွေကို ဆက်သွယ်ကြည့်ပါခင်ဗျာ။” ဟု ယဉ်ကျေးစွာ ပြန်လည်ဖြေကြားပါမယ်။
-
-အဆင့်များပြသသည့် မေးခွန်းများအတွက်တော့ တစ်ဆင့်ချင်းနည်းလမ်းများ၊ လုပ်ဆောင်ပုံနမူနာများဖြင့် လမ်းညွှန်ပေးပါမယ်။`;
-
-// This is the main serverless function handler for Vercel
-module.exports = async (req, res) => {
-    // Set CORS headers for security and to allow client-side requests
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Consider restricting this to your Vercel domain in production (e.g., 'https://your-app-name.vercel.app')
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    // Handle preflight OPTIONS requests
-    if (req.method === 'OPTIONS') {
-        return res.status(200).send();
-    }
-
-    // Ensure it's a POST request
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed. Only POST requests are accepted.' });
-    }
-
-    const { question, history } = req.body; // Expect 'question' and 'history' from the client
-
-    if (!question) {
-        return res.status(400).json({ error: "မေးခွန်းမပါဝင်ပါ။" });
-    }
+    // Show a loading message from the bot
+    displayMessage("မေးခွန်းကိုဖြေဖို့ကြိုးစားနေပါတယ်...", 'bot');
 
     try {
-        // Initialize chat history with the system prompt
-        // The system prompt is always the first "user" message in the history
-        let currentHistory = [{ role: "user", parts: SYSTEM_PROMPT }];
-
-        // If history is provided from the client, append it (excluding its own system prompt if present)
-        if (history && Array.isArray(history)) {
-             // Filter out any system prompts if the client accidentally sends it in the history
-            const filteredHistory = history.filter(msg => msg.parts !== SYSTEM_PROMPT);
-            currentHistory = currentHistory.concat(filteredHistory);
-        }
-
-        // The new user question is added to the history just before sending to Gemini
-        currentHistory.push({ role: "user", parts: question });
-
-        const chat = model.startChat({
-            history: currentHistory, // Pass the entire conversation history for context
-            generationConfig: {
-                maxOutputTokens: 2000, // Allow for longer, more complete answers
-            },
+        const response = await fetch("/api/gemini", { // Call your Vercel serverless function
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                question: question,
+                history: clientConversationHistory // Send the current history for context
+            })
         });
 
-        // Send *only the latest user message* to the chat, as the history is already provided
-        const result = await chat.sendMessage(question);
-        const response = await result.response;
-        const text = response.text();
+        if (!response.ok) {
+            // Attempt to parse error message from server
+            const errorData = await response.json().catch(() => ({ error: response.statusText }));
+            throw new Error(errorData.error || `API Error: ${response.status}`);
+        }
 
-        // Add the bot's reply to the history for the *next* request
-        currentHistory.push({ role: "model", parts: text });
+        const data = await response.json();
+        const reply = data.reply || "✨ မဖြေပေးနိုင်ပါ။";
 
-        // Send back the bot's reply AND the updated history for the client to store
-        res.json({ reply: text, updatedHistory: currentHistory });
+        // IMPORTANT: Update client-side history with the latest history provided by the server.
+        // The server sends back `updatedHistory` which includes the system prompt + all turns.
+        if (data.updatedHistory && Array.isArray(data.updatedHistory)) {
+            clientConversationHistory = data.updatedHistory;
+            // Optionally, save to localStorage for persistence across browser sessions:
+            // localStorage.setItem('chatHistory', JSON.stringify(clientConversationHistory));
+        }
+
+        animateBotReply(reply); // Animate the bot's reply
 
     } catch (error) {
-        console.error("Error communicating with Gemini API:", error);
-        // More specific error messages can be added based on error.code or error.status
-        if (error.response && error.response.status === 429) {
-            return res.status(429).json({ error: "ခဏစောင့်ပါ။ မေးခွန်းများ အလွန်များပြားနေပါသည်။" });
-        }
-        res.status(500).json({ error: "✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။" });
+        console.error("Error:", error);
+        animateBotReply(`✨ ဆက်သွယ်မှုမအောင်မြင်ပါ။ ပြန်လည်ကြိုးစားပါ။ (${error.message})`);
     }
-};
+}
+
+// Function to display messages in the chat interface
+function displayMessage(message, sender) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message', sender);
+    messageContainer.innerHTML = (sender === 'user' ? " 👨‍💼 " : " ✨ ") + escapeHtml(message); // Using innerHTML for potential Markdown, escape to prevent XSS
+    messagesDiv.appendChild(messageContainer);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+}
+
+// Typing animation for bot message
+function animateBotReply(text) {
+    // Find the latest bot message (which is currently the loading message)
+    const botMessages = messagesDiv.querySelectorAll('.message.bot');
+    if (botMessages.length === 0) return;
+
+    const messageElement = botMessages[botMessages.length - 1];
+    let index = 0;
+    const prefix = "✨ ";
+
+    // Clear the loading message and start typing
+    messageElement.textContent = prefix;
+
+    const typingInterval = setInterval(() => {
+        if (index < text.length) {
+            messageElement.textContent += text.charAt(index);
+            index++;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Keep scrolling while typing
+        } else {
+            clearInterval(typingInterval);
+        }
+    }, 10); // Adjust typing speed here (ms per character)
+}
+
+// Helper function to escape HTML for display
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+// Add event listeners
+sendButton.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default Enter key behavior (e.g., new line)
+        sendMessage();
+    }
+});
+
+// Optional: Load history from localStorage on page load
+// This allows chat history to persist even if the user closes and reopens the tab/browser.
+document.addEventListener('DOMContentLoaded', () => {
+    const storedHistory = localStorage.getItem('chatHistory');
+    if (storedHistory) {
+        try {
+            clientConversationHistory = JSON.parse(storedHistory);
+            // Optionally, you can re-display past messages here,
+            // but for simplicity, we'll just load the history for sending.
+            // Be careful if the history includes the system prompt, as you don't want to display it.
+        } catch (e) {
+            console.error("Failed to parse stored chat history:", e);
+            localStorage.removeItem('chatHistory'); // Clear invalid history
+        }
+    }
+});
